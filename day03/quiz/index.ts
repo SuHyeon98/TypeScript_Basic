@@ -11,56 +11,86 @@ type CardHeight = "xs" | "sm" | "md" | "lg" | "xl";
 type CardWidth = "xs" | "sm" | "md" | "lg" | "xl";
 type CardBG = "primary" | "secondary" | "dark";
 type CardChild = "top" | "middle" | "buttom";
-type CardClick = { click: () => void };
-type CardPosition = "relative" | "absolute";
+type CardClick = () => void;
 
 type CardStyle = {
   width: CardWidth;
   height: CardHeight;
   backgroundColor: CardBG;
-  CardClick: CardClick;
-  CardPosition: CardPosition;
+  display: "flex";
+  flexDirection: "column";
+  justifyContent: CardChild;
+  click: CardClick;
 };
 
-const Position = {
-  relative: "relative",
-  absolute: "absolute",
+type SizeType = {
+  [key in CardHeight & CardWidth]: string;
 };
 
-const CardSize = {
-  xs: { width: "30px", height: "30px" },
-  sm: { width: "50px", height: "50px" },
-  md: { width: "100px", height: "100px" },
-  lg: { width: "150px", height: "150px" },
-  xl: { width: "200px", height: "200px" },
+const sizeMap: SizeType = {
+  xs: "50px",
+  sm: "100px",
+  md: "150px",
+  lg: "200px",
+  xl: "250px",
 };
 
-const Bg = {
-  primary: "blue",
-  secondary: "red",
-  dark: "dark",
+type Pallete = "#2980b9" | "#3498db" | "#34495e";
+type BgType = {
+  [key in CardBG]: Pallete;
 };
 
-const Child = {
-  top: { top: "0px" },
-  middle: { top: "50px", left: "50px" },
-  buttom: { buttom: "0px" },
+const colorMap: BgType = {
+  primary: "#2980b9",
+  secondary: "#3498db",
+  dark: "#34495e",
+};
+
+type ChildType = {
+  [key in CardChild]: string;
+};
+
+const childMap: ChildType = {
+  top: "top",
+  middle: "middle",
+  buttom: "buttom",
 };
 
 const applyCard = (div: HTMLDivElement, style: CardStyle) => {
-  div.style.backgroundColor = Bg[style.backgroundColor];
-  div.style.width = CardSize[style.width].width;
-  div.style.height = CardSize[style.height].height;
-  div.style.position = Position[style.CardPosition];
+  div.style.display = style.display;
+  div.style.flexDirection = style.flexDirection;
+  div.style.justifyContent = childMap[style.justifyContent];
+  div.style.backgroundColor = colorMap[style.backgroundColor];
+  div.style.width = sizeMap[style.width];
+  div.style.height = sizeMap[style.height];
 };
 
 const myDivStyle: CardStyle = {
   width: "sm",
   height: "xs",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "buttom",
   backgroundColor: "primary",
-  CardPosition: "relative",
-  click: () => alert("click"),
+  click: () => alert("card click"),
 };
 
-const a = document.createElement("div");
-applyCard(a);
+const yourDivStyle: CardStyle = {
+  width: "sm",
+  height: "xl",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "middle",
+  backgroundColor: "secondary",
+  click: () => alert("card click"),
+};
+
+const card = document.createElement("div");
+card.innerText = "card";
+const card1 = document.createElement("div");
+card1.innerText = "card";
+
+applyCard(card, myDivStyle);
+applyCard(card1, yourDivStyle);
+document.body.appendChild(card);
+document.body.appendChild(card1);
